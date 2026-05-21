@@ -97,7 +97,8 @@ class VideoAdmin(admin.ModelAdmin):
         }),
     )
     
-    readonly_fields = ['video_url']
+    # Remove readonly_fields for video_url since it's now manually entered
+    # readonly_fields = ['video_url']  # Comment this out or remove
     
     def status_badge(self, obj):
         colors = {'draft': 'gray', 'published': 'green', 'archived': 'red'}
@@ -115,7 +116,6 @@ class VideoAdmin(admin.ModelAdmin):
         from django.utils import timezone
         queryset.update(status='published', published_at=timezone.now())
     publish_videos.short_description = 'Publish selected videos'
-
 
 @admin.register(CaseStudy)
 class CaseStudyAdmin(admin.ModelAdmin):

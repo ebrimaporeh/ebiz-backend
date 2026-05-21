@@ -44,6 +44,10 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'apps.core',
     'apps.users',
+    'apps.sectors',
+    'apps.businesses',
+    'apps.content',
+    'apps.reports',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -124,9 +128,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    config('FRONTEND_URL', default='http://localhost:3000'),
-]
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='').split(',')
+
 CORS_ALLOW_CREDENTIALS = True
 
 # REST Framework settings

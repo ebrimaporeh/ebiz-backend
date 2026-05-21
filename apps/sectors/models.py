@@ -3,6 +3,14 @@ from django.utils.text import slugify
 
 from apps.core.models import BaseModel
 from apps.core.constants import Status
+import os
+from django.utils import timezone
+
+def sector_image_path(instance, filename):
+    """Generate path for sector images: sectors/slug/filename.jpg"""
+    ext = filename.split('.')[-1] if '.' in filename else 'jpg'
+    new_filename = f"{timezone.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    return f"sectors/{instance.slug}/{new_filename}"
 
 
 class Sector(BaseModel):
@@ -32,7 +40,7 @@ class Sector(BaseModel):
     )
     
     featured_image = models.ImageField(
-        upload_to='sectors/',
+        upload_to=sector_image_path,
         blank=True,
         null=True,
         help_text="Featured image for the sector"

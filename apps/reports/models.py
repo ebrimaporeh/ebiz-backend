@@ -7,6 +7,20 @@ from apps.core.constants import Status
 from apps.sectors.models import Sector
 from apps.businesses.models import Business
 from apps.users.models import User
+import os
+from django.utils import timezone
+
+def report_cover_path(instance, filename):
+    """Generate path for report covers: reports/covers/slug/filename.jpg"""
+    ext = filename.split('.')[-1] if '.' in filename else 'jpg'
+    new_filename = f"{timezone.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    return f"reports/covers/{instance.slug}/{new_filename}"
+
+def report_file_path(instance, filename):
+    """Generate path for report files: reports/files/slug/filename.pdf"""
+    ext = filename.split('.')[-1] if '.' in filename else 'pdf'
+    return f"reports/files/{instance.slug}/{filename}"
+
 
 
 class ReportType(models.TextChoices):
@@ -54,14 +68,14 @@ class Report(BaseModel):
     )
     
     cover_image = models.ImageField(
-        upload_to='reports/covers/',
+        upload_to=report_cover_path,
         blank=True,
         null=True,
         help_text="Cover image for the report"
     )
     
     file = models.FileField(
-        upload_to='reports/files/',
+        upload_to=report_file_path,
         help_text="The actual report file (PDF, Excel, etc.)"
     )
     

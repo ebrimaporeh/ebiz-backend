@@ -74,7 +74,7 @@ class VideoListSerializer(serializers.ModelSerializer):
         model = Video
         fields = [
             'id', 'title', 'slug', 'description', 'thumbnail_url',
-            'platform', 'duration', 'is_premium', 'is_featured',
+            'platform', 'duration', 'is_premium', 'is_featured', 'video_url',
             'view_count', 'published_at', 'sector_name'
         ]
 

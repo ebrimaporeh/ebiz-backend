@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+import os
+from django.utils import timezone
 from apps.core.models import BaseModel
 from apps.core.constants import Status, ScaleType, Priority, RiskCategory, FeasibilityCategory
 from apps.sectors.models import Sector
@@ -10,6 +11,13 @@ from apps.sectors.models import Sector
 # ============================================
 # BUSINESS MODEL
 # ============================================
+
+def business_image_path(instance, filename):
+    """Generate path for business images: businesses/slug/filename.jpg"""
+    ext = filename.split('.')[-1] if '.' in filename else 'jpg'
+    new_filename = f"{timezone.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    return f"businesses/{instance.slug}/{new_filename}"
+
 
 class Business(BaseModel):
     """Main business entity (e.g., Poultry Farming, Taxi Services)"""
@@ -41,7 +49,7 @@ class Business(BaseModel):
     )
     
     featured_image = models.ImageField(
-        upload_to='businesses/',
+        upload_to=business_image_path,
         blank=True,
         null=True,
         help_text="Main image for the business"
@@ -903,6 +911,16 @@ class BusinessProfile(BaseModel):
 # BUSINESS PROFILE FEATURE MODEL
 # ============================================
 
+def business_profile_logo_path(instance, filename):
+    """Generate path for business profile logos: business-profiles/logos/slug/filename.jpg"""
+    ext = filename.split('.')[-1] if '.' in filename else 'jpg'
+    return f"business-profiles/logos/{instance.slug}/{filename}"
+
+def business_profile_cover_path(instance, filename):
+    """Generate path for business profile covers: business-profiles/covers/slug/filename.jpg"""
+    ext = filename.split('.')[-1] if '.' in filename else 'jpg'
+    return f"business-profiles/covers/{instance.slug}/{filename}"
+
 class BusinessProfileFeature(models.Model):
     """
     Features/testimonials from the business for display on their profile
@@ -913,6 +931,19 @@ class BusinessProfileFeature(models.Model):
         on_delete=models.CASCADE,
         related_name='features',
         help_text="Business profile this feature belongs to"
+    )
+    logo = models.ImageField(
+        upload_to=business_profile_logo_path,
+        blank=True,
+        null=True,
+        help_text="Business logo"
+    )
+    
+    cover_image = models.ImageField(
+        upload_to=business_profile_cover_path,
+        blank=True,
+        null=True,
+        help_text="Cover/banner image"
     )
     
     title = models.CharField(

@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
+import os
+from django.utils import timezone
 
 from apps.core.models import BaseModel
 from apps.core.constants import Status
@@ -25,6 +27,17 @@ class VideoPlatform(models.TextChoices):
 # ARTICLE MODEL
 # ============================================
 
+
+def article_image_path(instance, filename):
+    """Generate path for article images: articles/2025/01/filename.jpg"""
+    now = timezone.now()
+    # Get file extension
+    ext = filename.split('.')[-1] if '.' in filename else 'jpg'
+    # Generate unique filename
+    new_filename = f"{instance.slug}_{now.strftime('%Y%m%d%H%M%S')}.{ext}"
+    return f"articles/{now.strftime('%Y')}/{now.strftime('%m')}/{new_filename}"
+
+
 class Article(BaseModel):
     """Blog articles and written content"""
     
@@ -48,7 +61,7 @@ class Article(BaseModel):
     )
     
     featured_image = models.ImageField(
-        upload_to='articles/',
+        upload_to=article_image_path,
         blank=True,
         null=True,
         help_text="Main image for the article"
@@ -171,7 +184,6 @@ class Article(BaseModel):
 # ============================================
 # VIDEO MODEL
 # ============================================
-
 class Video(BaseModel):
     """Video content from YouTube, TikTok, etc."""
     
@@ -194,12 +206,12 @@ class Video(BaseModel):
     
     platform_video_id = models.CharField(
         max_length=100,
+        blank=True,
         help_text="Video ID from the platform (e.g., YouTube video ID)"
     )
     
     video_url = models.URLField(
-        blank=True,
-        help_text="Full video URL (auto-generated from platform and ID)"
+        help_text="Full video URL (required - enter the complete URL)"
     )
     
     thumbnail_url = models.URLField(
@@ -288,7 +300,7 @@ class Video(BaseModel):
     
     def __str__(self):
         return self.title
-   
+    
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.title)
@@ -299,13 +311,8 @@ class Video(BaseModel):
                 counter += 1
             self.slug = slug
         
-        # Auto-generate video URL from platform and ID
-        if self.platform == VideoPlatform.YOUTUBE and self.platform_video_id:
-            self.video_url = f"https://www.youtube.com/watch?v={self.platform_video_id}"
-        elif self.platform == VideoPlatform.TIKTOK and self.platform_video_id:
-            self.video_url = f"https://www.tiktok.com/@/video/{self.platform_video_id}"
-        elif self.platform == VideoPlatform.VIMEO and self.platform_video_id:
-            self.video_url = f"https://vimeo.com/{self.platform_video_id}"
+        # REMOVED: Auto-generation of video_url
+        # Now video_url must be provided manually
         
         super().save(*args, **kwargs)
 
@@ -321,8 +328,6 @@ class Video(BaseModel):
         elif self.platform == VideoPlatform.VIMEO and self.platform_video_id:
             return f"https://player.vimeo.com/video/{self.platform_video_id}"
         return None
-
-
 # ============================================
 # CASE STUDY MODEL
 # ============================================
