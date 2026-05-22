@@ -53,6 +53,8 @@ CORS_ALLOW_CREDENTIALS = True
 # ALLOWED_HOSTS
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.onrender.com').split(',')
 
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS')
+
 # Logging
 LOGGING = {
     'version': 1,
