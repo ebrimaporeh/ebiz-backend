@@ -1,27 +1,17 @@
 # gambih_config/settings/production.py
 import os
-# import dj_database_url
 from .base import *
-
 
 DEBUG = False
 
-# Security settings
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
+# Security settings - comment out for now until HTTPS is fully configured
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
 
-
-# Database
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.environ.get('DATABASE_URL'),
-#         conn_max_age=600,
-#         conn_health_checks=True,
-#     )
-# }
+# Database - keep SQLite for now
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -29,32 +19,59 @@ DATABASES = {
     }
 }
 
-
-
-
-# CORS settings - Allow your Render frontend URL
-cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+# CORS settings - Directly set allowed origins
 CORS_ALLOWED_ORIGINS = [
-    origin.strip() for origin in cors_origins.split(',') 
-    if origin.strip() and (origin.strip().startswith('http://') or origin.strip().startswith('https://'))
+    "https://gambih.netlify.app",
+    "https://bih-five.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
 ]
 
-# If no valid origins, allow none (safe default)
-if not CORS_ALLOWED_ORIGINS:
-    CORS_ALLOWED_ORIGINS = []
+# Allow all origins for testing (remove after confirming working)
+# CORS_ALLOW_ALL_ORIGINS = True  # Uncomment only for testing
 
 CORS_ALLOW_CREDENTIALS = True
 
-# ALLOWED_HOSTS
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.onrender.com').split(',')
-
-csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
-
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in csrf_origins.split(',')
-    if origin.strip().startswith(('http://', 'https://'))
+# Also allow these methods
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# ALLOWED_HOSTS
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.onrender.com',
+    'gambih.netlify.app',
+    'bih-five.vercel.app',
+]
+
+# CSRF trusted origins (important for POST requests)
+CSRF_TRUSTED_ORIGINS = [
+    "https://gambih.netlify.app",
+    "https://bih-five.vercel.app",
+    "http://localhost:5173",
+]
+
+
+
 # Logging
 LOGGING = {
     'version': 1,
