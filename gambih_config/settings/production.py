@@ -32,10 +32,8 @@ DATABASES = {
 # Static files with Whitenoise
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Add Whitenoise middleware
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
 
 # CORS settings - Allow your Render frontend URL
 cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '')
