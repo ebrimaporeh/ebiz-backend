@@ -2,7 +2,7 @@
 import os
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 # Security settings - comment out for now until HTTPS is fully configured
 # SECURE_SSL_REDIRECT = True
