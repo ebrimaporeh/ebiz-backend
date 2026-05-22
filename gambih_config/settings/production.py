@@ -29,9 +29,6 @@ DATABASES = {
     }
 }
 
-# Static files with Whitenoise
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 
