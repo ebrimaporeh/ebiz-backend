@@ -1,4 +1,6 @@
-# apps/core/seed_data/operations_checklists.py
+"""
+Operations checklists seed data
+"""
 
 OPERATIONS_CHECKLISTS = [
     # Poultry - Daily Tasks
@@ -29,8 +31,8 @@ OPERATIONS_CHECKLISTS = [
         "scale_type": "all",
         "task_type": "daily",
         "task_name": "Water Check",
-        "description": "Ensure clean water is available. Clean drinkers if necessary.",
-        "time_of_day": "Morning",
+        "description": "Ensure waterers are clean and functioning. Refill as needed.",
+        "time_of_day": "Midday",
         "responsible": "Farm Worker",
         "duration_minutes": 20,
         "order": 3
@@ -40,10 +42,10 @@ OPERATIONS_CHECKLISTS = [
         "scale_type": "all",
         "task_type": "daily",
         "task_name": "Litter Management",
-        "description": "Check litter condition. Add fresh bedding if needed.",
-        "time_of_day": "Midday",
+        "description": "Turn or add bedding material to keep litter dry and reduce ammonia.",
+        "time_of_day": "Afternoon",
         "responsible": "Farm Worker",
-        "duration_minutes": 30,
+        "duration_minutes": 45,
         "order": 4
     },
     {
@@ -51,42 +53,74 @@ OPERATIONS_CHECKLISTS = [
         "scale_type": "all",
         "task_type": "daily",
         "task_name": "Evening Check",
-        "description": "Final check of birds, feed, and water. Record any observations.",
+        "description": "Final check of birds, feed, water, and security before close.",
         "time_of_day": "Evening",
         "responsible": "Farm Manager",
-        "duration_minutes": 20,
+        "duration_minutes": 25,
         "order": 5
     },
+    
     # Poultry - Weekly Tasks
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "all",
         "task_type": "weekly",
-        "task_name": "Equipment Inspection",
-        "description": "Inspect feeders, drinkers, and heating equipment for proper function.",
-        "time_of_day": "",
-        "responsible": "Farm Manager",
-        "duration_minutes": 60,
+        "task_name": "Deep Cleaning",
+        "description": "Thorough cleaning of feeders, drinkers, and equipment.",
+        "responsible": "Farm Worker",
+        "duration_minutes": 120,
         "order": 1
     },
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "all",
         "task_type": "weekly",
-        "task_name": "Vaccination",
-        "description": "Administer scheduled vaccinations based on the vaccination calendar.",
-        "time_of_day": "",
-        "responsible": "Vet/Farm Manager",
-        "duration_minutes": 120,
+        "task_name": "Health Inspection",
+        "description": "Catch and examine sample birds for weight gain and health issues.",
+        "responsible": "Farm Manager",
+        "duration_minutes": 90,
         "order": 2
     },
-    # Taxi - Daily Tasks
+    {
+        "business_name": "Poultry Farming - Broilers",
+        "scale_type": "all",
+        "task_type": "weekly",
+        "task_name": "Inventory Check",
+        "description": "Count remaining feed and medication supplies. Reorder if needed.",
+        "responsible": "Farm Manager",
+        "duration_minutes": 45,
+        "order": 3
+    },
+    
+    # Poultry - Monthly Tasks
+    {
+        "business_name": "Poultry Farming - Broilers",
+        "scale_type": "all",
+        "task_type": "monthly",
+        "task_name": "Financial Reconciliation",
+        "description": "Review income, expenses, and profit for the month.",
+        "responsible": "Owner/Manager",
+        "duration_minutes": 120,
+        "order": 1
+    },
+    {
+        "business_name": "Poultry Farming - Broilers",
+        "scale_type": "all",
+        "task_type": "monthly",
+        "task_name": "Equipment Maintenance",
+        "description": "Inspect and service fans, heaters, and water systems.",
+        "responsible": "Farm Manager",
+        "duration_minutes": 180,
+        "order": 2
+    },
+    
+    # Taxi Services - Daily Tasks
     {
         "business_name": "Taxi Services",
-        "scale_type": "small",
+        "scale_type": "all",
         "task_type": "daily",
         "task_name": "Vehicle Inspection",
-        "description": "Check tires, oil, fuel, lights, and overall vehicle condition.",
+        "description": "Check tyres, oil, water, lights, and brakes before starting shift.",
         "time_of_day": "Morning",
         "responsible": "Driver",
         "duration_minutes": 15,
@@ -94,10 +128,10 @@ OPERATIONS_CHECKLISTS = [
     },
     {
         "business_name": "Taxi Services",
-        "scale_type": "small",
+        "scale_type": "all",
         "task_type": "daily",
-        "task_name": "Clean Vehicle",
-        "description": "Clean interior and exterior of the vehicle.",
+        "task_name": "Vehicle Cleaning",
+        "description": "Clean interior and exterior of vehicle.",
         "time_of_day": "Morning",
         "responsible": "Driver",
         "duration_minutes": 20,
@@ -105,82 +139,84 @@ OPERATIONS_CHECKLISTS = [
     },
     {
         "business_name": "Taxi Services",
-        "scale_type": "small",
+        "scale_type": "all",
         "task_type": "daily",
-        "task_name": "Record Keeping",
-        "description": "Record daily trips, income, fuel purchases, and expenses.",
-        "time_of_day": "Evening",
-        "responsible": "Owner/Driver",
-        "duration_minutes": 15,
+        "task_name": "Fuel Check",
+        "description": "Refuel as needed and record mileage.",
+        "time_of_day": "Morning",
+        "responsible": "Driver",
+        "duration_minutes": 10,
         "order": 3
     },
+    {
+        "business_name": "Taxi Services",
+        "scale_type": "all",
+        "task_type": "daily",
+        "task_name": "Cash Reconciliation",
+        "description": "Count daily earnings and record in logbook.",
+        "time_of_day": "Evening",
+        "responsible": "Driver",
+        "duration_minutes": 15,
+        "order": 4
+    },
+    
     # Taxi - Weekly Tasks
     {
         "business_name": "Taxi Services",
-        "scale_type": "small",
+        "scale_type": "all",
         "task_type": "weekly",
-        "task_name": "Full Vehicle Check",
-        "description": "Comprehensive inspection including brakes, suspension, and electrical systems.",
-        "time_of_day": "",
-        "responsible": "Mechanic",
+        "task_name": "Professional Car Wash",
+        "description": "Full professional cleaning of vehicle.",
+        "responsible": "Driver",
         "duration_minutes": 60,
         "order": 1
     },
-    # Software Agency - Daily Tasks
+    
+    # Solar Installation - Daily Tasks
     {
-        "business_name": "Software Development Agency",
-        "scale_type": "small",
+        "business_name": "Solar Panel Installation",
+        "scale_type": "all",
         "task_type": "daily",
-        "task_name": "Stand-up Meeting",
-        "description": "Team meeting to discuss progress, blockers, and plans for the day.",
+        "task_name": "Tool Check",
+        "description": "Verify all tools and equipment are present and in working order.",
         "time_of_day": "Morning",
-        "responsible": "Team Lead",
+        "responsible": "Technician",
         "duration_minutes": 15,
         "order": 1
     },
     {
-        "business_name": "Software Development Agency",
-        "scale_type": "small",
+        "business_name": "Solar Panel Installation",
+        "scale_type": "all",
         "task_type": "daily",
-        "task_name": "Code Review",
-        "description": "Review team members' code for quality and best practices.",
-        "time_of_day": "Afternoon",
-        "responsible": "Senior Developer",
-        "duration_minutes": 60,
+        "task_name": "Site Safety Check",
+        "description": "Review site safety before beginning installation work.",
+        "time_of_day": "Morning",
+        "responsible": "Site Supervisor",
+        "duration_minutes": 20,
         "order": 2
     },
+    
+    # Mobile Money - Daily Tasks
     {
-        "business_name": "Software Development Agency",
-        "scale_type": "small",
+        "business_name": "Mobile Money Agency",
+        "scale_type": "all",
         "task_type": "daily",
-        "task_name": "Client Communication",
-        "description": "Respond to client messages, provide updates, and address concerns.",
-        "time_of_day": "Midday",
-        "responsible": "Project Manager",
-        "duration_minutes": 30,
-        "order": 3
-    },
-    # Software Agency - Weekly Tasks
-    {
-        "business_name": "Software Development Agency",
-        "scale_type": "small",
-        "task_type": "weekly",
-        "task_name": "Sprint Planning",
-        "description": "Plan tasks and priorities for the upcoming sprint.",
-        "time_of_day": "",
-        "responsible": "Project Manager",
-        "duration_minutes": 60,
+        "task_name": "Cash Count",
+        "description": "Count float and record beginning balance.",
+        "time_of_day": "Morning",
+        "responsible": "Agent",
+        "duration_minutes": 10,
         "order": 1
     },
     {
-        "business_name": "Software Development Agency",
-        "scale_type": "small",
-        "task_type": "weekly",
-        "task_name": "Sprint Review",
-        "description": "Review completed work and demonstrate to stakeholders.",
-        "time_of_day": "",
-        "responsible": "Project Manager",
-        "duration_minutes": 60,
+        "business_name": "Mobile Money Agency",
+        "scale_type": "all",
+        "task_type": "daily",
+        "task_name": "End-of-Day Reconciliation",
+        "description": "Reconcile transactions and count ending cash balance.",
+        "time_of_day": "Evening",
+        "responsible": "Agent",
+        "duration_minutes": 20,
         "order": 2
-    }
+    },
 ]

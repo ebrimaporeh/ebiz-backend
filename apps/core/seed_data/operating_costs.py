@@ -1,137 +1,208 @@
-# apps/core/seed_data/operating_costs.py
+"""
+Operating costs seed data - UPDATED for new schema
+Uses period_number, period_type, cost_category instead of week_range and feed_* fields
+"""
 
 OPERATING_COSTS = [
-    # Poultry - Small Scale
+    # Poultry - Small Scale - Cycle 1
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "small",
-        "week_range": "1-2",
-        "feed_starter": 4500,
-        "feed_grower": 0,
-        "feed_finisher": 0,
-        "utilities": 300,
-        "water": 200,
-        "medication": 400,
-        "labor": 0,
-        "transport_misc": 200
-    },
-    {
-        "business_name": "Poultry Farming - Broilers",
-        "scale_type": "small",
-        "week_range": "3-4",
-        "feed_starter": 4500,
-        "feed_grower": 0,
-        "feed_finisher": 0,
-        "utilities": 300,
-        "water": 200,
-        "medication": 300,
-        "labor": 0,
-        "transport_misc": 200
+        "year": 2024,
+        "period_number": 1,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_starter", "amount": 4500},
+            {"category": "utilities", "amount": 300},
+            {"category": "water", "amount": 200},
+            {"category": "medication", "amount": 400},
+            {"category": "labor", "amount": 0},
+            {"category": "transport_misc", "amount": 200},
+        ]
     },
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "small",
-        "week_range": "5-6",
-        "feed_starter": 0,
-        "feed_grower": 6000,
-        "feed_finisher": 0,
-        "utilities": 300,
-        "water": 200,
-        "medication": 200,
-        "labor": 0,
-        "transport_misc": 300
+        "year": 2024,
+        "period_number": 2,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_grower", "amount": 5800},
+            {"category": "utilities", "amount": 300},
+            {"category": "water", "amount": 200},
+            {"category": "medication", "amount": 300},
+            {"category": "labor", "amount": 0},
+            {"category": "transport_misc", "amount": 200},
+        ]
     },
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "small",
-        "week_range": "7-8",
-        "feed_starter": 0,
-        "feed_grower": 6000,
-        "feed_finisher": 3600,
-        "utilities": 300,
-        "water": 200,
-        "medication": 100,
-        "labor": 0,
-        "transport_misc": 400
+        "year": 2024,
+        "period_number": 3,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_finisher", "amount": 6200},
+            {"category": "utilities", "amount": 300},
+            {"category": "water", "amount": 200},
+            {"category": "medication", "amount": 250},
+            {"category": "labor", "amount": 0},
+            {"category": "transport_misc", "amount": 250},
+        ]
     },
-    # Poultry - Medium Scale
+    
+    # Poultry - Medium Scale - Cycle 1
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "medium",
-        "week_range": "1-2",
-        "feed_starter": 22500,
-        "feed_grower": 0,
-        "feed_finisher": 0,
-        "utilities": 1500,
-        "water": 800,
-        "medication": 2000,
-        "labor": 3000,
-        "transport_misc": 1000
-    },
-    {
-        "business_name": "Poultry Farming - Broilers",
-        "scale_type": "medium",
-        "week_range": "3-4",
-        "feed_starter": 22500,
-        "feed_grower": 0,
-        "feed_finisher": 0,
-        "utilities": 1500,
-        "water": 800,
-        "medication": 1500,
-        "labor": 3000,
-        "transport_misc": 1000
+        "year": 2024,
+        "period_number": 1,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_starter", "amount": 22500},
+            {"category": "utilities", "amount": 1000},
+            {"category": "water", "amount": 500},
+            {"category": "medication", "amount": 1500},
+            {"category": "labor", "amount": 3000},
+            {"category": "transport_misc", "amount": 800},
+        ]
     },
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "medium",
-        "week_range": "5-6",
-        "feed_starter": 0,
-        "feed_grower": 30000,
-        "feed_finisher": 0,
-        "utilities": 1500,
-        "water": 800,
-        "medication": 1000,
-        "labor": 3000,
-        "transport_misc": 1500
+        "year": 2024,
+        "period_number": 2,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_grower", "amount": 29000},
+            {"category": "utilities", "amount": 1000},
+            {"category": "water", "amount": 500},
+            {"category": "medication", "amount": 1000},
+            {"category": "labor", "amount": 3000},
+            {"category": "transport_misc", "amount": 800},
+        ]
     },
     {
         "business_name": "Poultry Farming - Broilers",
         "scale_type": "medium",
-        "week_range": "7-8",
-        "feed_starter": 0,
-        "feed_grower": 30000,
-        "feed_finisher": 18000,
-        "utilities": 1500,
-        "water": 800,
-        "medication": 500,
-        "labor": 3000,
-        "transport_misc": 2000
+        "year": 2024,
+        "period_number": 3,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_finisher", "amount": 31000},
+            {"category": "utilities", "amount": 1000},
+            {"category": "water", "amount": 500},
+            {"category": "medication", "amount": 800},
+            {"category": "labor", "amount": 3000},
+            {"category": "transport_misc", "amount": 1000},
+        ]
     },
-    # Taxi - Small Scale (Monthly costs as weekly equivalents)
+    
+    # Poultry - Large Scale - Cycle 1
+    {
+        "business_name": "Poultry Farming - Broilers",
+        "scale_type": "large",
+        "year": 2024,
+        "period_number": 1,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_starter", "amount": 90000},
+            {"category": "utilities", "amount": 3500},
+            {"category": "water", "amount": 1500},
+            {"category": "medication", "amount": 5000},
+            {"category": "labor", "amount": 12000},
+            {"category": "transport_misc", "amount": 3000},
+        ]
+    },
+    {
+        "business_name": "Poultry Farming - Broilers",
+        "scale_type": "large",
+        "year": 2024,
+        "period_number": 2,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_grower", "amount": 116000},
+            {"category": "utilities", "amount": 3500},
+            {"category": "water", "amount": 1500},
+            {"category": "medication", "amount": 3500},
+            {"category": "labor", "amount": 12000},
+            {"category": "transport_misc", "amount": 3000},
+        ]
+    },
+    {
+        "business_name": "Poultry Farming - Broilers",
+        "scale_type": "large",
+        "year": 2024,
+        "period_number": 3,
+        "period_type": "cycle",
+        "costs": [
+            {"category": "feed_finisher", "amount": 124000},
+            {"category": "utilities", "amount": 3500},
+            {"category": "water", "amount": 1500},
+            {"category": "medication", "amount": 3000},
+            {"category": "labor", "amount": 12000},
+            {"category": "transport_misc", "amount": 4000},
+        ]
+    },
+    
+    # Taxi Services - Small Scale (Monthly)
     {
         "business_name": "Taxi Services",
         "scale_type": "small",
-        "week_range": "1-4",
-        "feed_starter": 0,
-        "feed_grower": 0,
-        "feed_finisher": 0,
-        "utilities": 0,
-        "water": 0,
-        "medication": 0,
-        "labor": 0,
-        "transport_misc": 10000
+        "year": 2024,
+        "period_number": 1,
+        "period_type": "month",
+        "costs": [
+            {"category": "fuel", "amount": 15000},
+            {"category": "maintenance", "amount": 3000},
+            {"category": "insurance", "amount": 5000},
+            {"category": "licensing", "amount": 2000},
+            {"category": "labor", "amount": 0},
+        ]
     },
     {
         "business_name": "Taxi Services",
+        "scale_type": "medium",
+        "year": 2024,
+        "period_number": 1,
+        "period_type": "month",
+        "costs": [
+            {"category": "fuel", "amount": 60000},
+            {"category": "maintenance", "amount": 10000},
+            {"category": "insurance", "amount": 15000},
+            {"category": "licensing", "amount": 5000},
+            {"category": "labor", "amount": 15000},
+        ]
+    },
+    
+    # Solar Installation - Medium Scale (Monthly)
+    {
+        "business_name": "Solar Panel Installation",
+        "scale_type": "medium",
+        "year": 2024,
+        "period_number": 1,
+        "period_type": "month",
+        "costs": [
+            {"category": "labor", "amount": 45000},
+            {"category": "transport_misc", "amount": 10000},
+            {"category": "marketing", "amount": 8000},
+            {"category": "utilities", "amount": 5000},
+            {"category": "rent", "amount": 15000},
+        ]
+    },
+    
+    # Mobile Money Agency - Small Scale (Monthly)
+    {
+        "business_name": "Mobile Money Agency",
         "scale_type": "small",
-        "week_range": "5-8",
-        "feed_starter": 0,
-        "feed_grower": 0,
-        "feed_finisher": 0,
-        "utilities": 0,
-        "water": 0,
-        "medication": 0,
-        "labor": 0,
-        "transport_misc": 10000
-    }
+        "year": 2024,
+        "period_number": 1,
+        "period_type": "month",
+        "costs": [
+            {"category": "rent", "amount": 5000},
+            {"category": "utilities", "amount": 1500},
+            {"category": "labor", "amount": 3000},
+            {"category": "marketing", "amount": 1000},
+        ]
+    },
 ]
