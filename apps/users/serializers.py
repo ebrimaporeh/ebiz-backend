@@ -157,11 +157,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
     Serializer for UserProfile model.
     Handles user profile data including social links.
     """
+    email = serializers.EmailField(
+    required=True,
+    validators=[UniqueValidator(
+        queryset=User.objects.all(),
+        message='This email already exists.' 
+    )],
+    help_text='Email address used for login.'
+    )
     
     class Meta:
         model = UserProfile
         fields = (
             'avatar',
+            'email',
             'linkedin_url',
             'twitter_handle',
             'website_url',

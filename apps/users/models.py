@@ -196,7 +196,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return f"{self.first_name} {self.last_name}".strip()
         return self.email
     
-    @property
     def has_premium_access(self):
         """
         Check if user has access to premium content.

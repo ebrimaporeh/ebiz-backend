@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django.shortcuts import get_object_or_404
 
 from apps.core.pagination import StandardPagination
 from apps.core.permissions import IsAdminOrReadOnly, IsPremiumUser
@@ -20,6 +21,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     ViewSet for Article model.
     
     Provides CRUD operations for blog articles.
+    Supports lookup by both UUID (primary key) and slug.
     Public: Read-only access to free content
     Premium users: Full content access
     Admin: Full CRUD access
@@ -34,6 +36,8 @@ class ArticleViewSet(viewsets.ModelViewSet):
     filterset_fields = ['sector', 'status', 'is_premium', 'is_featured']
     ordering_fields = ['view_count', 'published_at', 'created_at']
     ordering = ['-published_at']
+    lookup_field = 'pk'  # Keep default, we'll override get_object
+    lookup_value_regex = '[^/.]+'
     
     def get_serializer_class(self):
         if self.action == 'list':
@@ -51,12 +55,34 @@ class ArticleViewSet(viewsets.ModelViewSet):
         
         return queryset
     
+    def get_object(self):
+        """
+        Override get_object to support lookup by either UUID or slug.
+        """
+        lookup_value = self.kwargs.get('pk')
+        
+        # Try to find by UUID first
+        try:
+            import uuid
+            uuid.UUID(str(lookup_value))
+            # It's a valid UUID, use default lookup
+            return super().get_object()
+        except (ValueError, TypeError):
+            # Not a UUID, try to find by slug
+            obj = get_object_or_404(Article, slug=lookup_value, is_deleted=False)
+            
+            # Check object permissions
+            self.check_object_permissions(self.request, obj)
+            return obj
+    
     def retrieve(self, request, *args, **kwargs):
         """Get article with premium content filtering"""
         instance = self.get_object()
         
         # Check if user has access to premium content
-        if instance.is_premium and not request.user.has_premium_access:
+        has_premium = hasattr(request.user, 'has_premium_access') and request.user.has_premium_access()
+        
+        if instance.is_premium and not has_premium:
             # Return article without premium content
             serializer = ArticleDetailSerializer(instance)
             data = serializer.data
@@ -74,8 +100,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
     def like(self, request, pk=None):
         """Like an article"""
         article = self.get_object()
-        article.like_count += 1
-        article.save(update_fields=['like_count'])
+        from django.db.models import F
+        Article.objects.filter(pk=article.pk).update(like_count=F('like_count') + 1)
+        article.refresh_from_db()
         return Response({'like_count': article.like_count})
     
     @action(detail=False, methods=['get'])
@@ -89,19 +116,32 @@ class ArticleViewSet(viewsets.ModelViewSet):
     def add_comment(self, request):
         """Add a comment to an article"""
         article_id = request.data.get('article_id')
+        article_slug = request.data.get('article_slug')
         user_name = request.data.get('user_name')
         user_email = request.data.get('user_email')
         content = request.data.get('content')
         
-        if not all([article_id, user_name, user_email, content]):
+        if not all([user_name, user_email, content]):
             return Response(
-                {'error': 'All fields are required'},
+                {'error': 'user_name, user_email, and content are required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        try:
-            article = Article.objects.get(id=article_id)
-        except Article.DoesNotExist:
+        # Find article by ID or slug
+        article = None
+        if article_id:
+            try:
+                article = Article.objects.get(id=article_id, is_deleted=False)
+            except Article.DoesNotExist:
+                pass
+        
+        if not article and article_slug:
+            try:
+                article = Article.objects.get(slug=article_slug, is_deleted=False)
+            except Article.DoesNotExist:
+                pass
+        
+        if not article:
             return Response(
                 {'error': 'Article not found'},
                 status=status.HTTP_404_NOT_FOUND
@@ -121,6 +161,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 class VideoViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Video model.
+    Supports lookup by both UUID and slug.
     """
     
     queryset = Video.objects.filter(is_deleted=False).select_related('sector', 'business')
@@ -148,11 +189,30 @@ class VideoViewSet(viewsets.ModelViewSet):
         
         return queryset
     
+    def get_object(self):
+        """
+        Override get_object to support lookup by either UUID or slug.
+        """
+        lookup_value = self.kwargs.get('pk')
+        
+        # Try to find by UUID first
+        try:
+            import uuid
+            uuid.UUID(str(lookup_value))
+            return super().get_object()
+        except (ValueError, TypeError):
+            # Not a UUID, try to find by slug
+            obj = get_object_or_404(Video, slug=lookup_value, is_deleted=False)
+            self.check_object_permissions(self.request, obj)
+            return obj
+    
     def retrieve(self, request, *args, **kwargs):
         """Get video with access control"""
         instance = self.get_object()
         
-        if instance.is_premium and not request.user.has_premium_access:
+        has_premium = hasattr(request.user, 'has_premium_access') and request.user.has_premium_access()
+        
+        if instance.is_premium and not has_premium:
             return Response(
                 {'error': 'Premium subscription required', 'premium_locked': True},
                 status=status.HTTP_403_FORBIDDEN
@@ -173,6 +233,7 @@ class VideoViewSet(viewsets.ModelViewSet):
 class CaseStudyViewSet(viewsets.ModelViewSet):
     """
     ViewSet for CaseStudy model.
+    Supports lookup by both UUID and slug.
     """
     
     queryset = CaseStudy.objects.filter(is_deleted=False).select_related('sector')
@@ -200,6 +261,21 @@ class CaseStudyViewSet(viewsets.ModelViewSet):
         
         return queryset
     
+    def get_object(self):
+        """
+        Override get_object to support lookup by either UUID or slug.
+        """
+        lookup_value = self.kwargs.get('pk')
+        
+        try:
+            import uuid
+            uuid.UUID(str(lookup_value))
+            return super().get_object()
+        except (ValueError, TypeError):
+            obj = get_object_or_404(CaseStudy, slug=lookup_value, is_deleted=False)
+            self.check_object_permissions(self.request, obj)
+            return obj
+    
     def retrieve(self, request, *args, **kwargs):
         """Get case study with view count increment"""
         instance = self.get_object()
@@ -223,6 +299,20 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = StandardPagination
     search_fields = ['name']
     ordering = ['name']
+    lookup_field = 'pk'
+    
+    def get_object(self):
+        """Support lookup by both ID and slug."""
+        lookup_value = self.kwargs.get('pk')
+        
+        try:
+            import uuid
+            uuid.UUID(str(lookup_value))
+            return super().get_object()
+        except (ValueError, TypeError):
+            obj = get_object_or_404(Tag, slug=lookup_value)
+            self.check_object_permissions(self.request, obj)
+            return obj
     
     @action(detail=True, methods=['get'])
     def articles(self, request, pk=None):

@@ -1,70 +1,57 @@
+# apps/sectors/admin.py
+
 from django.contrib import admin
-from django.urls import reverse
-from django.utils.html import format_html
-from .models import Sector
-from apps.core.constants import Status
+from .models import Sector, SectorTag, SectorStat
 
 
 @admin.register(Sector)
 class SectorAdmin(admin.ModelAdmin):
-    list_display = [
-        'name',
-        'slug',
-        'business_count_display',
-        'order',
-        'status_badge',
-        'created_at',
-    ]
-    
-    list_filter = ['status', 'created_at', 'updated_at']
+    list_display = ['name', 'country_display', 'region', 'business_count', 'status', 'order']
+    list_filter = ['status', 'country', 'region']
     search_fields = ['name', 'description']
-    prepopulated_fields = {'slug': ('name',)}
+    prepopulated_fields = {'slug': ['name']}
+    list_editable = ['order']
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'slug', 'description', 'status')
+            'fields': ('name', 'slug', 'description', 'parent')
         }),
-        ('Visuals', {
+        ('Geographic Scope', {
+            'fields': ('country', 'region', 'currency')
+        }),
+        ('Visual', {
             'fields': ('icon', 'color', 'featured_image'),
             'classes': ('collapse',)
         }),
-        ('Display Settings', {
-            'fields': ('order',),
+        ('Market Data', {
+            'fields': ('business_count', 'estimated_market_size', 'estimated_market_size_display'),
             'classes': ('collapse',)
         }),
+        ('Status', {
+            'fields': ('status', 'order', 'summary_for_ai')
+        }),
         ('Metadata', {
-            'fields': ('business_count', 'created_at', 'updated_at'),
+            'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
     
-    readonly_fields = ['created_at', 'updated_at', 'business_count']
-    
-    actions = ['publish_sectors', 'unpublish_sectors']
-    
-    def status_badge(self, obj):
-        colors = {
-            'draft': 'gray',
-            'published': 'green',
-            'archived': 'red',
-        }
-        color = colors.get(obj.status, 'gray')
-        return format_html(
-            '<span style="background-color: {}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">{}</span>',
-            'gray' if color == 'gray' else ('#10b981' if color == 'green' else '#ef4444'),
-            obj.get_status_display()
-        )
-    status_badge.short_description = 'Status'
-    
-    def business_count_display(self, obj):
-        url = reverse('admin:businesses_business_changelist') + f'?sector__id__exact={obj.id}'
-        return format_html('<a href="{}">{} businesses</a>', url, obj.business_count)
-    business_count_display.short_description = 'Businesses'
-    
-    def publish_sectors(self, request, queryset):
-        queryset.update(status=Status.PUBLISHED)
-    publish_sectors.short_description = 'Publish selected sectors'
-    
-    def unpublish_sectors(self, request, queryset):
-        queryset.update(status=Status.DRAFT)
-    unpublish_sectors.short_description = 'Unpublish selected sectors'
+    def country_display(self, obj):
+        """Display country name"""
+        from apps.core.constants import Country as CountryChoice
+        return dict(CountryChoice.choices).get(obj.country, obj.country)
+    country_display.short_description = "Country"
+
+
+@admin.register(SectorTag)
+class SectorTagAdmin(admin.ModelAdmin):
+    list_display = ['label', 'slug']
+    search_fields = ['label', 'description']
+    prepopulated_fields = {'slug': ['label']}
+
+
+@admin.register(SectorStat)
+class SectorStatAdmin(admin.ModelAdmin):
+    list_display = ['label', 'sector', 'value', 'unit', 'year']
+    list_filter = ['sector', 'year', 'unit', 'country', 'region']
+    search_fields = ['label']
