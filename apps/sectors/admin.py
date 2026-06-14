@@ -9,9 +9,10 @@ class SectorAdmin(admin.ModelAdmin):
     list_display = ['name', 'country_display', 'region', 'business_count', 'status', 'order']
     list_filter = ['status', 'country', 'region']
     search_fields = ['name', 'description']
-    prepopulated_fields = {'slug': ['name']}
+    prepopulated_fields = {'slug': ('name',)}
     list_editable = ['order']
-    
+    readonly_fields = ['created_at', 'updated_at']
+
     fieldsets = (
         ('Basic Information', {
             'fields': ('name', 'slug', 'description', 'parent')
@@ -35,7 +36,10 @@ class SectorAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
+    def get_prepopulated_fields(self, _request, obj=None):
+        return {} if obj else self.prepopulated_fields
+
     def country_display(self, obj):
         """Display country name"""
         from apps.core.constants import Country as CountryChoice

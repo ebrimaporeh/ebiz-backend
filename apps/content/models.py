@@ -300,9 +300,11 @@ class Video(BaseModel):
     video_url = models.URLField(
         help_text="Full video URL (required - enter the complete URL)"
     )
-    thumbnail_url = models.URLField(
+    thumbnail = models.ImageField(
+        upload_to='content/video/thumbnails/',
         blank=True,
-        help_text="Thumbnail image URL"
+        null=True,
+        help_text="Thumbnail image"
     )
     duration = models.PositiveSmallIntegerField(
         null=True,

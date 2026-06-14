@@ -103,9 +103,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text='User identifies as an investor (local or diaspora).'
     )
     
-    is_student = models.BooleanField(
+    is_researcher = models.BooleanField(
         default=False,
-        help_text='User is a student learning about business.'
+        help_text='User is a researcher or student learning about business.'
     )
     
     # ============================================
@@ -264,7 +264,7 @@ class UserProfile(models.Model):
     # ============================================
     
     avatar = models.ImageField(
-        upload_to='avatars/',
+        upload_to='user/avatars/',
         blank=True,
         null=True,
         help_text='Profile picture/avatar.'

@@ -22,7 +22,9 @@ ENV/
 .env.staging
 
 # Media and static files (user-uploaded content)
-media/
+media/*
+!media/user/
+!media/user/.gitkeep
 
 # IDE
 .vscode/

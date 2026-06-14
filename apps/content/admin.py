@@ -83,7 +83,7 @@ class VideoAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'description')
         }),
         ('Video Source', {
-            'fields': ('platform', 'platform_video_id', 'video_url', 'thumbnail_url', 'duration')
+            'fields': ('platform', 'platform_video_id', 'video_url', 'thumbnail', 'duration')
         }),
         ('Relationships', {
             'fields': ('sector', 'business')

@@ -50,9 +50,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'last_name',
             'phone', 
             'location', 
-            'is_entrepreneur', 
-            'is_investor', 
-            'is_student'
+            'is_entrepreneur',
+            'is_investor',
+            'is_researcher'
         )
         extra_kwargs = {
             'first_name': {'required': False, 'allow_blank': True},
@@ -61,7 +61,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'location': {'required': False, 'allow_blank': True},
             'is_entrepreneur': {'required': False},
             'is_investor': {'required': False},
-            'is_student': {'required': False},
+            'is_researcher': {'required': False},
         }
     
     def validate(self, attrs):
@@ -73,22 +73,19 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
     
     def create(self, validated_data):
-        """Create user and profile."""
+        """Create user — profile is auto-created via post_save signal."""
         password = validated_data.pop('password')
         validated_data.pop('password_confirm')
-        
+
         user = User.objects.create_user(
             email=validated_data.pop('email'),
             password=password,
             **validated_data
         )
-        
-        # Create profile
-        UserProfile.objects.create(user=user)
-        
-        # Create auth token
-        Token.objects.create(user=user)
-        
+
+        # Ensure token exists (signal doesn't create it)
+        Token.objects.get_or_create(user=user)
+
         return user
 
 
@@ -157,15 +154,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     Serializer for UserProfile model.
     Handles user profile data including social links.
     """
-    email = serializers.EmailField(
-    required=True,
-    validators=[UniqueValidator(
-        queryset=User.objects.all(),
-        message='This email already exists.' 
-    )],
-    help_text='Email address used for login.'
-    )
-    
+    email = serializers.EmailField(source='user.email', read_only=True)
+
     class Meta:
         model = UserProfile
         fields = (
@@ -210,7 +200,7 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'is_entrepreneur',
             'is_investor',
-            'is_student',
+            'is_researcher',
             'tier',
             'tier_display',
             'has_premium_access',
@@ -246,11 +236,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'bio',
             'is_entrepreneur',
             'is_investor',
-            'is_student',
+            'is_researcher',
             'newsletter_subscribed',
             'email_notifications',
         )
-    
+
     def update(self, instance, validated_data):
         """Update user instance with validated data."""
         for attr, value in validated_data.items():
@@ -593,7 +583,7 @@ class PublicUserSerializer(serializers.ModelSerializer):
             'bio',
             'is_entrepreneur',
             'is_investor',
-            'is_student',
+            'is_researcher',
             'initials',
         )
         read_only_fields = fields

@@ -58,10 +58,10 @@ class BusinessAdmin(admin.ModelAdmin):
     list_display = ['name', 'sector', 'status', 'is_featured', 'view_count', 'has_scales']
     list_filter = ['status', 'is_featured', 'sector', 'has_scales']
     search_fields = ['name', 'short_description', 'overview']
-    prepopulated_fields = {'slug': ['name']}
+    prepopulated_fields = {'slug': ('name',)}
     fieldsets = (
         ('Basic Information', {
-            'fields': ('sector', 'name', 'short_description', 'overview', 'opportunity_thesis')
+            'fields': ('sector', 'name', 'slug', 'short_description', 'overview', 'opportunity_thesis')
         }),
         ('Media', {
             'fields': ('featured_image',),
@@ -75,7 +75,13 @@ class BusinessAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
+    def get_prepopulated_fields(self, _request, obj=None):
+        # slug is readonly for existing objects — disable prepopulate JS to avoid KeyError
+        if obj:
+            return {}
+        return self.prepopulated_fields
+
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return ['slug', 'view_count', 'created_at', 'updated_at']

@@ -26,6 +26,7 @@ urlpatterns = [
     
     # User profile endpoints
     path('users/profile/', views.UserProfileView.as_view(), name='user-profile'),
+    path('users/profile/avatar/', views.AvatarUploadView.as_view(), name='user-avatar'),
     path('users/preferences/', views.UserPreferencesView.as_view(), name='user-preferences'),
     path('users/public/<int:id>/', views.PublicUserView.as_view(), name='public-user'),
     

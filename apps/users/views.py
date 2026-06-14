@@ -157,6 +157,14 @@ class MeView(generics.RetrieveUpdateAPIView):
             return UserUpdateSerializer
         return UserSerializer
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        return Response(UserSerializer(instance).data)
+
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     """
@@ -173,7 +181,45 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     
     def get_object(self):
-        return self.request.user.profile
+        profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
+        return profile
+
+
+class AvatarUploadView(APIView):
+    """
+    Dedicated avatar upload endpoint.
+
+    Accepts multipart/form-data with a single 'avatar' file field.
+
+    POST /api/v1/users/profile/avatar/
+    DELETE /api/v1/users/profile/avatar/
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        if 'avatar' not in request.FILES:
+            return Response({'avatar': ['No file was submitted.']}, status=status.HTTP_400_BAD_REQUEST)
+
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+        # Delete old avatar file from storage before replacing
+        if profile.avatar:
+            profile.avatar.delete(save=False)
+
+        profile.avatar = request.FILES['avatar']
+        profile.save(update_fields=['avatar'])
+
+        avatar_url = request.build_absolute_uri(profile.avatar.url) if profile.avatar else None
+        return Response({'avatar': avatar_url}, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        if profile.avatar:
+            profile.avatar.delete(save=False)
+            profile.avatar = None
+            profile.save(update_fields=['avatar'])
+        return Response({'avatar': None}, status=status.HTTP_200_OK)
 
 
 class UserPreferencesView(generics.RetrieveUpdateAPIView):

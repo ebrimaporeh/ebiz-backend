@@ -35,21 +35,21 @@ class SubscriptionInline(admin.TabularInline):
     show_change_link = True
     
     def get_queryset(self, request):
-        return super().get_queryset(request).order_by('-created_at')[:5]
+        return super().get_queryset(request).order_by('-created_at')
 
 
 class OneTimePurchaseInline(admin.TabularInline):
     """Inline admin for One-Time Purchases."""
-    
+
     model = OneTimePurchase
     fields = ('report_title', 'amount', 'purchased_at', 'has_downloaded', 'download_count')
     readonly_fields = ('purchased_at',)
     extra = 0
     can_delete = False
     show_change_link = True
-    
+
     def get_queryset(self, request):
-        return super().get_queryset(request).order_by('-purchased_at')[:5]
+        return super().get_queryset(request).order_by('-purchased_at')
 
 
 @admin.register(User)
@@ -75,7 +75,7 @@ class UserAdmin(BaseUserAdmin):
         'is_staff', 
         'is_entrepreneur', 
         'is_investor', 
-        'is_student',
+        'is_researcher',
         'newsletter_subscribed',
     )
     
@@ -97,7 +97,7 @@ class UserAdmin(BaseUserAdmin):
             'description': 'Regular = free access only. Premium = subscription access. One-time = purchased specific reports.'
         }),
         ('User Type', {
-            'fields': ('is_entrepreneur', 'is_investor', 'is_student'),
+            'fields': ('is_entrepreneur', 'is_investor', 'is_researcher'),
             'classes': ('collapse',)
         }),
         ('Preferences', {
@@ -160,8 +160,8 @@ class UserAdmin(BaseUserAdmin):
             badges.append('<span style="background-color: #3b82f6; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-right: 4px;">Entrepreneur</span>')
         if obj.is_investor:
             badges.append('<span style="background-color: #8b5cf6; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-right: 4px;">Investor</span>')
-        if obj.is_student:
-            badges.append('<span style="background-color: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Student</span>')
+        if obj.is_researcher:
+            badges.append('<span style="background-color: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Researcher</span>')
         
         if not badges:
             return '—'

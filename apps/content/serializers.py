@@ -73,7 +73,7 @@ class VideoListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = [
-            'id', 'title', 'slug', 'description', 'thumbnail_url',
+            'id', 'title', 'slug', 'description', 'thumbnail',
             'platform', 'duration', 'is_premium', 'is_featured', 'video_url',
             'view_count', 'published_at', 'sector_name'
         ]
@@ -91,7 +91,7 @@ class VideoDetailSerializer(serializers.ModelSerializer):
         model = Video
         fields = [
             'id', 'title', 'slug', 'description', 'platform',
-            'platform_video_id', 'video_url', 'embed_url', 'thumbnail_url',
+            'platform_video_id', 'video_url', 'embed_url', 'thumbnail',
             'duration', 'is_premium', 'is_featured', 'published_at',
             'view_count', 'like_count', 'comment_count',
             'sector', 'sector_name', 'business', 'business_name',
